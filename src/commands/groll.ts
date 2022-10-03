@@ -7,6 +7,7 @@ import {
 	Message,
 	MessageActionRowComponentBuilder,
 	MessageComponentInteraction,
+	User,
 	userMention,
 } from "discord.js";
 import {
@@ -40,6 +41,30 @@ export class GroupRoll {
 		const roll = GuildRollManager.createGuildRoll(interaction.user, players ?? 5);
 		roll.signUp(interaction.user);
 		interaction.reply(this.buildMessageContent(roll));
+	}
+
+	@Slash({
+		name: "gradd",
+		description: "Add user to group roll",
+		dmPermission: false,
+	})
+	async gradd(
+		@SlashOption({
+			description: "Player to add",
+			name: "player",
+			required: true,
+			type: ApplicationCommandOptionType.User,
+		})
+		player: User,
+		interaction: CommandInteraction
+	): Promise<void> {
+		const roll = GuildRollManager.rollForUser(interaction.user);
+		if (roll === undefined) {
+			interaction.reply({ephemeral: true, content: `Couldn't find a roll`});
+		} else {
+			roll.signUp(player);
+			interaction.reply({ephemeral: true, content: `Added ${userMention(player.id)} to roll`});
+		}
 	}
 
 	@ButtonComponent({id: "join-btn"})
@@ -120,19 +145,16 @@ export class GroupRoll {
 		// Build buttons
 		const joinBtn = new ButtonBuilder()
 			.setLabel("Join")
-			// .setEmoji("👋")
 			.setStyle(ButtonStyle.Primary)
 			.setCustomId("join-btn");
 
 		const leaveBtn = new ButtonBuilder()
 			.setLabel("Leave")
-			// .setEmoji("👋")
 			.setStyle(ButtonStyle.Primary)
 			.setCustomId("leave-btn");
 
 		const rollBtn = new ButtonBuilder()
 			.setLabel("Roll")
-			// .setEmoji("🎲")
 			.setStyle(ButtonStyle.Primary)
 			.setCustomId("roll-btn");
 

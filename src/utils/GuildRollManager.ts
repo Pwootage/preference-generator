@@ -19,6 +19,16 @@ export class GuildRollManager {
 		return this.guildRolls.get(id);
 	}
 
+	static rollForUser(user: User): GuildRoll | undefined {
+		for (const roll of this.guildRolls.values()) {
+			if (roll.creator.id === user.id) return roll;
+		}
+		for (const roll of this.guildRolls.values()) {
+			if (roll.hasSignedUp(user)) return roll;
+		}
+		return undefined;
+	}
+
 	static deleteGuildRoll(id: number): void {
 		this.guildRolls.delete(id);
 	}
