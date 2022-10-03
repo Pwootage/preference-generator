@@ -10,3 +10,6 @@ token.json
 # folders
 build
 node_modules
+
+prisma/db
+prisma/migrations

@@ -1,0 +1,27 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./db/bot.db"
+}
+
+model User {
+  id                  String          @id
+  characters          GameCharacter[] @relation("UserCharacters")
+  selectedCharacter   GameCharacter?  @relation(fields: [selectedCharacterId], references: [id], name: "UserSelectedCharacter")
+  selectedCharacterId Int?            @unique
+}
+
+model GameCharacter {
+  id             Int    @id @default(autoincrement())
+  name           String
+  realm          String
+  user           User   @relation(fields: [userId], references: [id], name: "UserCharacters")
+  userId         String
+  selectedByUser User?  @relation("UserSelectedCharacter")
+}

@@ -1,8 +1,10 @@
+import {GameCharacter} from "@prisma/client";
 import {
 	BaseInteraction,
 	BaseMessageOptions,
 	ButtonInteraction,
 	CommandInteraction,
+	EmbedBuilder,
 	InteractionCollector,
 	Message,
 	MessageActionRowComponentBuilder,
@@ -17,6 +19,7 @@ import {
 	ButtonStyle,
 } from "discord.js";
 import {ButtonComponent, Discord, Slash, SlashOption} from "discordx";
+import {DB_CLIENT} from "../utils/DB.js";
 import {GuildRoll, GuildRollManager} from "../utils/GuildRollManager.js";
 
 @Discord()
@@ -90,7 +93,7 @@ export class GroupRoll {
 	}
 
 	@ButtonComponent({id: "roll-btn"})
-	rollBtn(interaction: ButtonInteraction): void {
+	async rollBtn(interaction: ButtonInteraction): Promise<void> {
 		const roll = this.rollFromInteraction(interaction);
 		if (roll === undefined) return;
 
@@ -112,9 +115,30 @@ export class GroupRoll {
 		for (const user of results) {
 			reply += ` ${userMention(user.id)}`;
 		}
+
+		const characters = (await DB_CLIENT.user.findMany({
+			where: {
+				id: {in: results.map((user) => user.id)},
+			},
+			include: {selectedCharacter: true},
+		}))?.map( user => user.selectedCharacter);
+
+		const embeds: EmbedBuilder[] = [];
+
+		if (characters && characters.length > 0) {
+			let inviteScript = `/run `;
+			for (const character of characters) {
+				if (character) {
+					inviteScript += `InviteUnit("${character.name}-${character.realm}");`;
+				}
+			}
+			reply += `\n\`\`\`${inviteScript}\`\`\``;
+		}
+
 		interaction.reply({
 			content: reply,
 			allowedMentions: {users: []},
+			embeds,
 		});
 	}
 
