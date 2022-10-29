@@ -32,9 +32,7 @@ COPY --from=build-runner /tmp/app/prisma /app/prisma
 # Install dependencies
 RUN npm install --only=production
 
-RUN npm run db:generate && npm run db:prod:migrate
-
-# Move build files
+RUN npm run db:generate
 
 # Start bot
-CMD [ "npm", "run", "start" ]
+CMD [ "npm", "run", "start:prod" ]
