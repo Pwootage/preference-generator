@@ -11,7 +11,9 @@
     "dev": "ts-node-esm src/main.ts",
     "start": "node build/main.js",
     "watch": "nodemon --exec ts-node-esm src/main.ts",
-    "initdb": "npx prisma migrate dev --name init"
+		"db:generate": "npx prisma generate",
+    "db:dev:migrage": "npx prisma migrate dev --name init",
+		"db:prod:migrage": "npx prisma migrate deploy"
   },
   "dependencies": {
     "@discordx/importer": "1.1.10",
