@@ -6,5 +6,5 @@ services:
     environment:
       - BOT_TOKEN=${BOT_TOKEN}
     volumes:
-      - ${PWD}/prisma/db:/app/prisma/db
-      - ${WPD}/token.json:/app/token.json
+      - ./prisma/db:/app/prisma/db
+      - ./token.json:/app/token.json
