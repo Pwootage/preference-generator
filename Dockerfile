@@ -1,7 +1,7 @@
 FROM node:lts-alpine
 
 # Set temp directory
-WORKDIR /tmp/app
+WORKDIR /app
 
 # Move package.json
 COPY package.json .
