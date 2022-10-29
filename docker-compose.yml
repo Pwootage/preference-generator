@@ -8,3 +8,4 @@ services:
     volumes:
       - ./prisma/db:/app/prisma/db
       - ./token.json:/app/token.json
+    restart: always
