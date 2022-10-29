@@ -5,13 +5,13 @@
     "outDir": "build",
     "rootDir": "src",
     "strict": true,
-    "moduleResolution": "Node",
+    "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
 
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
 
-    "skipLibCheck": false,
+    "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
   "exclude": ["build", "node_modules"]
