@@ -2,6 +2,7 @@
 .vscode
 .env
 .env.local
+.idea
 
 token.json
 
