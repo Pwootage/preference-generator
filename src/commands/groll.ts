@@ -43,12 +43,12 @@ export class GroupRoll {
 	): Promise<void> {
 		const roll = GuildRollManager.createGuildRoll(interaction.user, players ?? 5);
 		roll.signUp(interaction.user);
-		interaction.reply(this.buildMessageContent(roll));
-
-		// Clean up roll message
-		setTimeout(() => {
-			interaction.deleteReply()
-		}, ROLL_EXPIRE_TIME)
+		interaction.reply(this.buildMessageContent(roll))
+			.then(_ => {
+				setTimeout(() => {
+					interaction.deleteReply()
+				}, ROLL_EXPIRE_TIME)
+			});
 	}
 
 	@Slash({
@@ -144,13 +144,11 @@ export class GroupRoll {
 			content: reply,
 			allowedMentions: {users: []},
 			embeds,
+		}).then(_ => {
+			setTimeout(() => {
+				interaction.deleteReply()
+			}, 5 * 60 * 1000)
 		});
-
-
-		// Delete the rolled group message after 5 min
-		setTimeout(() => {
-			interaction.deleteReply()
-		}, 5 * 60 * 1000)
 	}
 
 	private rollFromInteraction(interaction: MessageComponentInteraction): GuildRoll | undefined {
