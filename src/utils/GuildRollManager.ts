@@ -1,4 +1,5 @@
 import {User} from "discord.js";
+import { shuffleArray } from "./Shuffle";
 
 export const ROLL_EXPIRE_TIME = 15 * 60 * 1000;
 export class GuildRollManager {
@@ -58,9 +59,7 @@ export class GuildRoll {
 	}
 
 	roll(): User[] {
-		return this.signedUpUsers
-			// I don't really like this, but i guess it's fine
-			.sort(() => Math.random() - 0.5)
+		return shuffleArray(this.signedUpUsers)
 			.slice(0, this.playerCount);
 	}
 }
