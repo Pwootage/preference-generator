@@ -20,7 +20,7 @@ import {
 } from "discord.js";
 import {ButtonComponent, Discord, Slash, SlashOption} from "discordx";
 import {DB_CLIENT} from "../utils/DB.js";
-import {GuildRoll, GuildRollManager} from "../utils/GuildRollManager.js";
+import {GuildRoll, GuildRollManager, ROLL_EXPIRE_TIME} from "../utils/GuildRollManager.js";
 
 @Discord()
 export class GroupRoll {
@@ -43,7 +43,12 @@ export class GroupRoll {
 	): Promise<void> {
 		const roll = GuildRollManager.createGuildRoll(interaction.user, players ?? 5);
 		roll.signUp(interaction.user);
-		interaction.reply(this.buildMessageContent(roll));
+		interaction.reply(this.buildMessageContent(roll))
+			.then(_ => {
+				setTimeout(() => {
+					interaction.deleteReply()
+				}, ROLL_EXPIRE_TIME)
+			});
 	}
 
 	@Slash({
@@ -139,6 +144,10 @@ export class GroupRoll {
 			content: reply,
 			allowedMentions: {users: []},
 			embeds,
+		}).then(_ => {
+			setTimeout(() => {
+				interaction.deleteReply()
+			}, 5 * 60 * 1000)
 		});
 	}
 

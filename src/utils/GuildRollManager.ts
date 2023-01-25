@@ -1,6 +1,6 @@
 import {User} from "discord.js";
 
-const ROLL_EXPIRE_TIME = 15 * 60 * 1000;
+export const ROLL_EXPIRE_TIME = 15 * 60 * 1000;
 export class GuildRollManager {
 	private static nextId = 0;
 	private static guildRolls: Map<number, GuildRoll> = new Map();
